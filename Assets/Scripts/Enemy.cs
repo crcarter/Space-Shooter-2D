@@ -29,7 +29,12 @@ public class Enemy : MonoBehaviour
     {
         if (other.transform.tag == "Player")
         {
-            //Damage Player
+            Player player = other.transform.GetComponent<Player>();
+            if (player != null)
+            {
+                player.Damage();
+            }
+
             Destroy(this.gameObject);
         }
         else if (other.transform.tag == "Laser")
