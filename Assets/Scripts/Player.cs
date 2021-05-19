@@ -4,24 +4,22 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField]
-    private float _speed = 3.5f;
-    [SerializeField]
-    private GameObject _laserPrefab;
-    private Vector3 _laserOffset = new Vector3(0, 1.05f, 0);
-    [SerializeField]
-    private float _fireRate = 0.15f;
+    [SerializeField] private float _speed = 3.5f;
+    [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private GameObject _tripleShot;
+    [SerializeField] private float _fireRate = 0.15f;
     private float _canFire = 0.0f;
-    [SerializeField]
-    private int _lives = 3;
+    [SerializeField] private int _lives = 3;
     private SpawnManager spawnManager;
+    [SerializeField] private bool _isTripleShotActive = false;
+    //Variable isTripleShotActive
 
 
     // Start is called before the first frame update
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
-        spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
+        spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
 
         if (spawnManager == null)
         {
@@ -66,7 +64,15 @@ public class Player : MonoBehaviour
     {
         
         _canFire = Time.time + _fireRate;
-        Instantiate(_laserPrefab, transform.position + _laserOffset, Quaternion.identity);
+        
+
+        if (_isTripleShotActive)
+        {
+            Instantiate(_tripleShot, transform.position, Quaternion.identity);
+        } else
+        {
+            Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+        }
     }
 
     public void Damage()
