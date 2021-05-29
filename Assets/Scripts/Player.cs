@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float _speed = 3.5f;
+    [SerializeField] private float _speed = 5.0f;
     private float _speedMultiplier = 2.0f;
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _tripleShot;
@@ -96,6 +96,8 @@ public class Player : MonoBehaviour
             return;
         }
         _lives--;
+
+        _uiManager.UpdateLives(_lives);
 
         if (_lives < 1)
         {
