@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
     private bool _isShieldActive = false;
 
     [SerializeField] private GameObject _shieldVisualizer;
+    [SerializeField] private GameObject _rightEngine;
+    [SerializeField] private GameObject _leftEngine;
 
     [SerializeField] private int _score;
     private UIManager _uiManager;
@@ -99,7 +101,15 @@ public class Player : MonoBehaviour
 
         _uiManager.UpdateLives(_lives);
 
-        if (_lives < 1)
+        if (_lives == 2)
+        {
+            _rightEngine.SetActive(true);
+        }
+        else if (_lives == 1)
+        {
+            _leftEngine.SetActive(true);
+        }
+        else if (_lives < 1)
         {
             spawnManager.OnPlayerDeath();
             Destroy(this.gameObject);
