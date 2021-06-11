@@ -27,6 +27,9 @@ public class Player : MonoBehaviour
     private AudioSource _audioSource;
     [SerializeField] private AudioClip _laserAudioClip;
 
+    private float _thrusterBoost = 1.0f;
+    private GameObject _thruster;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +37,7 @@ public class Player : MonoBehaviour
         spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
+        _thruster = GameObject.Find("Thruster");
 
         if (spawnManager == null)
         {
@@ -72,9 +76,11 @@ public class Player : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
+        CheckThrusterBoost();
+
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
 
-        transform.Translate(direction * _speed * Time.deltaTime);
+        transform.Translate(direction * _speed * _thrusterBoost * Time.deltaTime);
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
         
@@ -85,6 +91,20 @@ public class Player : MonoBehaviour
         else if (transform.position.x < -11.3)
         {
             transform.position = new Vector3(11.3f, transform.position.y, 0);
+        }
+    }
+
+    void CheckThrusterBoost()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            _thrusterBoost = 2.0f;
+            _thruster.transform.localScale = new Vector3(1.2f, 1.0f, 1.0f);
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            _thrusterBoost = 1.0f;
+            _thruster.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         }
     }
 
