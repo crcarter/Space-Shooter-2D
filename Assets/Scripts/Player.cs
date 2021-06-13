@@ -29,6 +29,9 @@ public class Player : MonoBehaviour
 
     private float _thrusterBoost = 1.0f;
     private GameObject _thruster;
+    private float _thrusterCharge = 100;
+    private bool _isThrusterCharged = true;
+    private bool _isThrusterActive = false;
 
     // Start is called before the first frame update
     void Start()
@@ -56,6 +59,11 @@ public class Player : MonoBehaviour
         else
         {
             _audioSource.clip = _laserAudioClip;
+        }
+
+        if (_thruster == null)
+        {
+            Debug.LogError("The Thruster is NULL.");
         }
     }
 
@@ -96,16 +104,34 @@ public class Player : MonoBehaviour
 
     void CheckThrusterBoost()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift) && _isThrusterCharged == true)
         {
             _thrusterBoost = 2.0f;
-            _thruster.transform.localScale = new Vector3(1.2f, 1.0f, 1.0f);
+            _thruster.transform.localScale = new Vector3(1.2f, 1f, 1f);
+            _isThrusterActive = true;
+            _isThrusterCharged = false;
         }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
+        if (Input.GetKeyUp(KeyCode.LeftShift) || _thrusterCharge <= 0)
         {
             _thrusterBoost = 1.0f;
-            _thruster.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            _thruster.transform.localScale = new Vector3(1f, 1f, 1f);
+            _isThrusterActive = false;
         }
+        
+        if (_isThrusterActive == true)
+        {
+            _thrusterCharge -= 1f;
+        }
+        if (_isThrusterActive == false && _isThrusterCharged == false)
+        {
+            _thrusterCharge += 0.25f;
+            if (_thrusterCharge >= 100)
+            {
+                _isThrusterCharged = true;
+            }
+        }
+
+        _uiManager.UpdateThruster(_thrusterCharge);
     }
 
     void FireLaser()
