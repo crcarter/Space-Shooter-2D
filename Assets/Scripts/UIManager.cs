@@ -11,7 +11,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite[] _liveSprites;
     [SerializeField] private Text _gameOverText;
     [SerializeField] private Text _restartText;
-    [SerializeField] private Text _thrusterText;
     [SerializeField] private Slider _thrusterSlider;
     private RectTransform _thrusterSliderRect;
 
@@ -23,7 +22,6 @@ public class UIManager : MonoBehaviour
         _gameOverText.gameObject.SetActive(false);
         _restartText.gameObject.SetActive(false);
         _scoreText.text = "Score: " + 0;
-        _thrusterText.text = "Thruster: " + 100;
         _thrusterSliderRect = _thrusterSlider.fillRect;
 
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
@@ -47,7 +45,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateThruster(float thrusterCharge)
     {
-        _thrusterText.text = "Thruster: " + (int)thrusterCharge;
+        _thrusterSliderRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, -5, 1.5f * thrusterCharge);
     }
 
     public void UpdateLives(int currentLives)
