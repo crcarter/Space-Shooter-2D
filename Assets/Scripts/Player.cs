@@ -18,6 +18,9 @@ public class Player : MonoBehaviour
     private bool _isShieldActive = false;
 
     [SerializeField] private GameObject _shieldVisualizer;
+    private int _shieldHitsLeft;
+    private SpriteRenderer _shieldSpriteRenderer;
+
     [SerializeField] private GameObject _rightEngine;
     [SerializeField] private GameObject _leftEngine;
 
@@ -41,6 +44,8 @@ public class Player : MonoBehaviour
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
         _thruster = GameObject.Find("Thruster");
+        _shieldHitsLeft = 0;
+        _shieldSpriteRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
 
         if (spawnManager == null)
         {
@@ -64,6 +69,11 @@ public class Player : MonoBehaviour
         if (_thruster == null)
         {
             Debug.LogError("The Thruster is NULL.");
+        }
+
+        if (_shieldSpriteRenderer == null)
+        {
+            Debug.LogError("The Shield Sprite Renderer is NULL.");
         }
     }
 
@@ -154,8 +164,23 @@ public class Player : MonoBehaviour
     {
         if (_isShieldActive)
         {
-            _isShieldActive = false;
-            _shieldVisualizer.SetActive(false);
+            _shieldHitsLeft--;
+            switch (_shieldHitsLeft)
+            {
+                case 2:
+                    _shieldVisualizer.transform.localScale = new Vector3(2.3f, 2f, 2f);
+                    _shieldSpriteRenderer.color = Color.green;
+                    break;
+                case 1:
+                    _shieldVisualizer.transform.localScale = new Vector3(2f, 2f, 2f);
+                    _shieldSpriteRenderer.color = Color.blue;
+                    break;
+                case 0:
+                    _isShieldActive = false;
+                    _shieldVisualizer.SetActive(false);
+                    break;
+            }
+            
             return;
         }
         _lives--;
@@ -206,7 +231,10 @@ public class Player : MonoBehaviour
     public void ShieldActive()
     {
         _isShieldActive = true;
+        _shieldHitsLeft = 3;
         _shieldVisualizer.SetActive(true);
+        _shieldVisualizer.transform.localScale = new Vector3(2.3f, 2.3f, 2f);
+        _shieldSpriteRenderer.color = Color.white;
     }
 
     public void AddScore(int points)
