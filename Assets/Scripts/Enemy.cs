@@ -16,9 +16,12 @@ public class Enemy : MonoBehaviour
 
     private float _fireRate = 3.0f;
     [SerializeField] private float _canFire = -1f;
+    private bool _isAlive;
 
     private void Start()
     {
+        _isAlive = true;
+
         _player = GameObject.FindWithTag("Player").GetComponent<Player>();
         if (_player == null)
         {
@@ -45,7 +48,7 @@ public class Enemy : MonoBehaviour
     {
         CalculateMovement();
 
-        if (Time.time > _canFire)
+        if (Time.time > _canFire && _isAlive == true)
         {
             FireLaser();
         }
@@ -108,6 +111,7 @@ public class Enemy : MonoBehaviour
         _anim.SetTrigger("OnEnemyDeath");
         _speed = 0;
         _audioSource.Play();
+        _isAlive = false;
 
         Destroy(GetComponent<Collider2D>());
         Destroy(this.gameObject, 2.8f);

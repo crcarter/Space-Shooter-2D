@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text _restartText;
     [SerializeField] private Slider _thrusterSlider;
     private RectTransform _thrusterSliderRect;
+    [SerializeField] private Text _ammoText;
 
     private GameManager _gameManager;
 
@@ -23,6 +24,7 @@ public class UIManager : MonoBehaviour
         _restartText.gameObject.SetActive(false);
         _scoreText.text = "Score: " + 0;
         _thrusterSliderRect = _thrusterSlider.fillRect;
+        _ammoText.text = "Ammo: " + 15;
 
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
 
@@ -75,5 +77,10 @@ public class UIManager : MonoBehaviour
             _gameOverText.gameObject.SetActive(false);
             yield return new WaitForSeconds(0.5f);
         }
+    }
+
+    public void UpdateAmmo(int currentAmmo)
+    {
+        _ammoText.text = "Ammo: " + currentAmmo;
     }
 }

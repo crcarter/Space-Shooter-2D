@@ -36,6 +36,8 @@ public class Player : MonoBehaviour
     private bool _isThrusterCharged = true;
     private bool _isThrusterActive = false;
 
+    private int _ammoCount;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,6 +48,7 @@ public class Player : MonoBehaviour
         _thruster = GameObject.Find("Thruster");
         _shieldHitsLeft = 0;
         _shieldSpriteRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
+        _ammoCount = 15;
 
         if (spawnManager == null)
         {
@@ -82,10 +85,8 @@ public class Player : MonoBehaviour
     {
         CalculateMovement();
 
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
-        {
-            FireLaser();
-        }
+        
+        FireLaser();
         
     }
 
@@ -146,18 +147,33 @@ public class Player : MonoBehaviour
 
     void FireLaser()
     {
-        _canFire = Time.time + _fireRate;
-        
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        {
+            if (_ammoCount > 0)
+            {
+                _canFire = Time.time + _fireRate;
 
-        if (_isTripleShotActive)
-        {
-            Instantiate(_tripleShot, transform.position, Quaternion.identity);
-        } else
-        {
-            Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+
+                if (_isTripleShotActive)
+                {
+                    Instantiate(_tripleShot, transform.position, Quaternion.identity);
+                }
+                else
+                {
+                    Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+                }
+
+                _ammoCount--;
+                _uiManager.UpdateAmmo(_ammoCount);
+                _audioSource.Play();
+            }
+            else
+            {
+                _audioSource.time = 0.3f;
+                _audioSource.Play();
+            }
         }
-
-        _audioSource.Play();
+        
     }
 
     public void Damage()
