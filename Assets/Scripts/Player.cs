@@ -258,4 +258,10 @@ public class Player : MonoBehaviour
         _score += points;
         _uiManager.UpdateScore(_score);
     }
+
+    public void CollectAmmo()
+    {
+        _ammoCount += 10;
+        _uiManager.UpdateAmmo(_ammoCount);
+    }
 }
