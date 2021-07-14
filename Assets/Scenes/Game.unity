@@ -1786,6 +1786,7 @@ MonoBehaviour:
   - {fileID: 726691406425193341, guid: 69b968a3c6bce9444a0e56615bbd14da, type: 3}
   - {fileID: 9216513039773888901, guid: d9ae7baf5c9cfd14f958ce306b68ef14, type: 3}
   - {fileID: 4276500305293911145, guid: 9acd5d56c05e4c14781cee9fde9e9fbc, type: 3}
+  - {fileID: 2860952005486246999, guid: 2e163a3d59ac47a4dbe409470d22bb3a, type: 3}
   _waitTime: 5
   _enemyContainer: {fileID: 147853850}
 --- !u!4 &1107446082
