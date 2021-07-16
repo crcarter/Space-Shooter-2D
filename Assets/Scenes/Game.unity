@@ -384,6 +384,7 @@ GameObject:
   m_Component:
   - component: {fileID: 240096650}
   - component: {fileID: 240096649}
+  - component: {fileID: 240096652}
   - component: {fileID: 240096648}
   - component: {fileID: 240096651}
   m_Layer: 0
@@ -518,6 +519,21 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!114 &240096652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240096647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19c5dba8c19de2243b61882dd358635a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shakeDuration: 0
+  shakeMagnitude: 0.5
+  dampingSpeed: 1
 --- !u!1 &377916251
 GameObject:
   m_ObjectHideFlags: 0

@@ -38,6 +38,8 @@ public class Player : MonoBehaviour
 
     private int _ammoCount;
 
+    private Camera _mainCamera;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,6 +51,7 @@ public class Player : MonoBehaviour
         _shieldHitsLeft = 0;
         _shieldSpriteRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
         _ammoCount = 15;
+        _mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
 
         if (spawnManager == null)
         {
@@ -77,6 +80,11 @@ public class Player : MonoBehaviour
         if (_shieldSpriteRenderer == null)
         {
             Debug.LogError("The Shield Sprite Renderer is NULL.");
+        }
+
+        if (_mainCamera == null)
+        {
+            Debug.LogError("The Camera is NULL.");
         }
     }
 
@@ -202,6 +210,8 @@ public class Player : MonoBehaviour
         _lives--;
 
         _uiManager.UpdateLives(_lives);
+
+        _mainCamera.TriggerShake();
 
         if (_lives == 2)
         {
