@@ -18,9 +18,15 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _canFire = -1f;
     private bool _isAlive;
 
+    [SerializeField] private int _moveType;
+    private Vector3 _moveDirection;
+    private Vector3 _moveCurve;
+
     private void Start()
     {
         _isAlive = true;
+        _moveType = Random.Range(0, 3);
+        SetMoveDirection();
 
         _player = GameObject.FindWithTag("Player").GetComponent<Player>();
         if (_player == null)
@@ -56,12 +62,55 @@ public class Enemy : MonoBehaviour
         
     void CalculateMovement()
     {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        transform.Translate(_moveDirection * _speed * Time.deltaTime);
+        if (_moveType == 2)
+        {
+            _moveDirection += _moveCurve;
+            _moveDirection = _moveDirection.normalized;
+        }
 
         if (transform.position.y < -5.0f)
         {
             float randomX = Random.Range(-8.0f, 8.0f);
             transform.position = new Vector3(randomX, 7.0f, 0);
+            SetMoveDirection();
+        }
+    }
+
+    void SetMoveDirection()
+    {
+        switch (_moveType)
+        {
+            case 0:
+                _moveDirection = Vector3.down;
+                break;
+            case 1:
+                if (transform.position.x > 0)
+                {
+                    _moveDirection = Vector3.down + Vector3.left;
+                }
+                else
+                {
+                    _moveDirection = Vector3.down + Vector3.right;
+                }
+                _moveDirection = _moveDirection.normalized;
+                break;
+            case 2:
+                if (transform.position.x > 0)
+                {
+                    _moveDirection = Vector3.down + Vector3.left;
+                    _moveCurve = new Vector3(0.003f, 0f, 0f);
+                }
+                else
+                { 
+                    _moveDirection = Vector3.down + Vector3.right;
+                    _moveCurve = new Vector3(-0.003f, 0f, 0f);
+                }
+                _moveDirection = _moveDirection.normalized;
+                break;
+            default:
+                _moveDirection = Vector3.down;
+                break;
         }
     }
 

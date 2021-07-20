@@ -51,6 +51,8 @@ MonoBehaviour:
   _speed: 4
   _laserPrefab: {fileID: 6696755694515349750, guid: 5f47c67892d12184eb7de4211869827d,
     type: 3}
+  _canFire: -1
+  _moveType: 0
 --- !u!212 &197160120863617457
 SpriteRenderer:
   m_ObjectHideFlags: 0
