@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
     private bool _isThrusterActive = false;
 
     private int _ammoCount;
+    private int _maxAmmo = 30;
 
     private Camera _mainCamera;
 
@@ -172,7 +173,7 @@ public class Player : MonoBehaviour
                 }
 
                 _ammoCount--;
-                _uiManager.UpdateAmmo(_ammoCount);
+                _uiManager.UpdateAmmo(_ammoCount, _maxAmmo);
                 _audioSource.Play();
             }
             else
@@ -272,7 +273,11 @@ public class Player : MonoBehaviour
     public void CollectAmmo()
     {
         _ammoCount += 10;
-        _uiManager.UpdateAmmo(_ammoCount);
+        if (_ammoCount > _maxAmmo)
+        {
+            _ammoCount = _maxAmmo;
+        }
+        _uiManager.UpdateAmmo(_ammoCount, _maxAmmo);
     }
 
     public void CollectHealth()

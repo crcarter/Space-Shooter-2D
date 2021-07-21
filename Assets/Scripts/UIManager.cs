@@ -24,7 +24,7 @@ public class UIManager : MonoBehaviour
         _restartText.gameObject.SetActive(false);
         _scoreText.text = "Score: " + 0;
         _thrusterSliderRect = _thrusterSlider.fillRect;
-        _ammoText.text = "Ammo: " + 15;
+        _ammoText.text = "Ammo: 15 / 30";
 
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
 
@@ -79,8 +79,8 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdateAmmo(int currentAmmo)
+    public void UpdateAmmo(int currentAmmo, int maxAmmo)
     {
-        _ammoText.text = "Ammo: " + currentAmmo;
+        _ammoText.text = "Ammo: " + currentAmmo + " / " + maxAmmo;
     }
 }
