@@ -9,10 +9,30 @@ public class Powerup : MonoBehaviour
 
     [SerializeField] private AudioClip _audioClip;
 
+    private Player _player;
+
+    private void Start()
+    {
+        _player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        if (_player == null)
+        {
+            Debug.LogError("Player is NULL in Powerup.");
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        if (Input.GetKey(KeyCode.C))
+        {
+            Vector3 directionVector = _player.transform.position - transform.position;
+            directionVector.Normalize();
+            transform.Translate(directionVector * _speed * Time.deltaTime);
+        }
+        else
+        {
+            transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        }
 
         if (transform.position.y < -6.0f)
         {
