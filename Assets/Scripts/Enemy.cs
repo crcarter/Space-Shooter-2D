@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
 
     private float _fireRate = 3.0f;
     [SerializeField] private float _canFire = -1f;
+    private float _canFireAtPowerup = -1f;
     private bool _isAlive;
 
     [SerializeField] private int _moveType;
@@ -57,6 +58,10 @@ public class Enemy : MonoBehaviour
         if (Time.time > _canFire && _isAlive == true)
         {
             FireLaser();
+        }
+        if (Time.time > _canFireAtPowerup && _isAlive == true)
+        {
+            CheckForPowerups();
         }
     }
         
@@ -164,5 +169,19 @@ public class Enemy : MonoBehaviour
 
         Destroy(GetComponent<Collider2D>());
         Destroy(this.gameObject, 2.8f);
+    }
+
+    private void CheckForPowerups()
+    {
+        Collider2D hitCollider = Physics2D.OverlapBox(gameObject.transform.position + new Vector3(0f, -5f), new Vector3(0.18f, 4f), 0f);
+
+        if (hitCollider != null)
+        {
+            if (hitCollider.tag == "Powerup")
+            {
+                FireLaser();
+                _canFireAtPowerup = Time.time + _fireRate;
+            }
+        }
     }
 }
