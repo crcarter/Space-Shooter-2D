@@ -110,7 +110,7 @@ public class Player : MonoBehaviour
 
         transform.Translate(direction * _speed * _thrusterBoost * Time.deltaTime);
 
-        transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
+        transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 2f), 0);
         
         if (transform.position.x > 11.3)
         {

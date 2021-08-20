@@ -17,11 +17,16 @@ public class Enemy : MonoBehaviour
     private float _fireRate = 3.0f;
     [SerializeField] private float _canFire = -1f;
     private float _canFireAtPowerup = -1f;
+    private float _canFireBehind = -1f;
     private bool _isAlive;
 
     [SerializeField] private int _moveType;
     private Vector3 _moveDirection;
     private Vector3 _moveCurve;
+
+    private int _laserDown = 1;
+    private int _laserUp = 0;
+
 
     private void Start()
     {
@@ -57,11 +62,15 @@ public class Enemy : MonoBehaviour
 
         if (Time.time > _canFire && _isAlive == true)
         {
-            FireLaser();
+            FireLaser(_laserDown);
         }
         if (Time.time > _canFireAtPowerup && _isAlive == true)
         {
             CheckForPowerups();
+        }
+        if (Time.time > _canFireBehind && _isAlive == true)
+        {
+            CheckForPlayerBehind();
         }
     }
         
@@ -119,16 +128,22 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void FireLaser()
+    void FireLaser(int direction)
     {
         _fireRate = Random.Range(3f, 7f);
         _canFire = Time.time + _fireRate;
-        GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+
+        Vector3 laserPosition = transform.position;
+        if (direction == _laserUp)
+        {
+            laserPosition += new Vector3(0f, 2f, 0f);
+        }
+        GameObject enemyLaser = Instantiate(_laserPrefab, laserPosition, Quaternion.identity);
         
         Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
         for (int i = 0; i < lasers.Length; i++)
         {
-            lasers[i].AssignEnemyLaser();
+            lasers[i].AssignEnemyLaser(direction);
         }
     }
 
@@ -173,14 +188,28 @@ public class Enemy : MonoBehaviour
 
     private void CheckForPowerups()
     {
-        Collider2D hitCollider = Physics2D.OverlapBox(gameObject.transform.position + new Vector3(0f, -5f), new Vector3(0.18f, 4f), 0f);
+        Collider2D hitCollider = Physics2D.OverlapBox(gameObject.transform.position + new Vector3(0f, -5f, 0f), new Vector3(0.18f, 4f, 0f), 0f);
 
         if (hitCollider != null)
         {
             if (hitCollider.tag == "Powerup")
             {
-                FireLaser();
+                FireLaser(_laserDown);
                 _canFireAtPowerup = Time.time + _fireRate;
+            }
+        }
+    }
+
+    private void CheckForPlayerBehind()
+    {
+        Collider2D hitCollider = Physics2D.OverlapBox(gameObject.transform.position + new Vector3(0f, 5f, 0f), new Vector3(0.18f, 4f, 0f), 0f);
+
+        if (hitCollider != null)
+        {
+            if (hitCollider.tag == "Player")
+            {
+                FireLaser(_laserUp);
+                _canFireBehind = Time.time + _fireRate;
             }
         }
     }
