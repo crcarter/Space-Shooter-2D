@@ -27,12 +27,20 @@ public class Enemy : MonoBehaviour
     private int _laserDown = 1;
     private int _laserUp = 0;
 
+    [SerializeField] private GameObject _shieldVisualizer;
+    private bool _isShieldActive = false;
+
+
 
     private void Start()
     {
         _isAlive = true;
         _moveType = Random.Range(0, 3);
         SetMoveDirection();
+        if (Random.Range(0, 2) == 1)
+        {
+            ActivateShield();
+        }
 
         _player = GameObject.FindWithTag("Player").GetComponent<Player>();
         if (_player == null)
@@ -154,6 +162,12 @@ public class Enemy : MonoBehaviour
             Player player = other.transform.GetComponent<Player>();
             if (player != null)
             {
+                if (_isShieldActive == true)
+                {
+                    _isShieldActive = false;
+                    _shieldVisualizer.SetActive(false);
+                    player.Damage();
+                }
                 player.Damage();
             }
 
@@ -164,13 +178,22 @@ public class Enemy : MonoBehaviour
             Laser laser = other.transform.GetComponent<Laser>();
             if (laser.GetIsEnemyLaser() == false)
             {
-                if (_player != null)
+                if (_isShieldActive == true)
                 {
-                    _player.AddScore(10);
+                    _isShieldActive = false;
+                    _shieldVisualizer.SetActive(false);
+                    Destroy(other.gameObject);
                 }
-                Destroy(other.gameObject);
+                else
+                {
+                    if (_player != null)
+                    {
+                        _player.AddScore(10);
+                    }
+                    Destroy(other.gameObject);
 
-                EnemyDeath();
+                    EnemyDeath();
+                }
             }
         }
     }
@@ -212,5 +235,11 @@ public class Enemy : MonoBehaviour
                 _canFireBehind = Time.time + _fireRate;
             }
         }
+    }
+
+    public void ActivateShield()
+    {
+        _isShieldActive = true;
+        _shieldVisualizer.SetActive(true);
     }
 }
