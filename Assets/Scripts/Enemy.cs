@@ -30,7 +30,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private GameObject _shieldVisualizer;
     private bool _isShieldActive = false;
 
-
+    [SerializeField] private float _aggroRange = 4f;
 
     private void Start()
     {
@@ -84,23 +84,37 @@ public class Enemy : MonoBehaviour
         
     void CalculateMovement()
     {
-        transform.Translate(_moveDirection * _speed * Time.deltaTime);
-        if (_moveType == 2)
+        if (Vector3.Distance(gameObject.transform.position, _player.transform.position) <= _aggroRange)
         {
-            _moveDirection += _moveCurve;
-            _moveDirection = _moveDirection.normalized;
+            Vector3 directionVector = _player.transform.position - transform.position;
+            directionVector.Normalize();
+            transform.Translate(directionVector * _speed * Time.deltaTime);
         }
+        else
+        {
+            transform.Translate(_moveDirection * _speed * Time.deltaTime);
+            if (_moveType == 2)
+            {
+                _moveDirection += _moveCurve;
+                _moveDirection = _moveDirection.normalized;
+            }
 
-        if (transform.position.y < -5.0f)
-        {
-            float randomX = Random.Range(-8.0f, 8.0f);
-            transform.position = new Vector3(randomX, 7.0f, 0);
-            SetMoveDirection();
+            if (transform.position.y < -5.0f)
+            {
+                float randomX = Random.Range(-8.0f, 8.0f);
+                transform.position = new Vector3(randomX, 7.0f, 0);
+                SetMoveDirection();
+            }
         }
+        
     }
 
     void SetMoveDirection()
     {
+        //Collider2D[] hitColliders = Physics2D.OverlapCircleAll(gameObject.transform.position, 3f);
+
+        
+
         switch (_moveType)
         {
             case 0:
