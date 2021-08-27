@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider _thrusterSlider;
     private RectTransform _thrusterSliderRect;
     [SerializeField] private Text _ammoText;
+    [SerializeField] private Text _waveText;
 
     private GameManager _gameManager;
 
@@ -25,6 +26,7 @@ public class UIManager : MonoBehaviour
         _scoreText.text = "Score: " + 0;
         _thrusterSliderRect = _thrusterSlider.fillRect;
         _ammoText.text = "Ammo: 15 / 30";
+        _waveText.text = "Wave: 0";
 
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
 
@@ -82,5 +84,10 @@ public class UIManager : MonoBehaviour
     public void UpdateAmmo(int currentAmmo, int maxAmmo)
     {
         _ammoText.text = "Ammo: " + currentAmmo + " / " + maxAmmo;
+    }
+
+    public void UpdateWave(int waveNum)
+    {
+        _waveText.text = "Wave: " + waveNum;
     }
 }

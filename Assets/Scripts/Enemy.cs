@@ -20,7 +20,7 @@ public class Enemy : MonoBehaviour
     private float _canFireBehind = -1f;
     private bool _isAlive;
 
-    [SerializeField] private int _moveType;
+    [SerializeField] private int _moveType = 0;
     private Vector3 _moveDirection;
     private Vector3 _moveCurve;
 
@@ -32,15 +32,11 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private float _aggroRange = 4f;
 
+    private SpawnManager _spawnManager;
+
     private void Start()
     {
         _isAlive = true;
-        _moveType = Random.Range(0, 3);
-        SetMoveDirection();
-        if (Random.Range(0, 2) == 1)
-        {
-            ActivateShield();
-        }
 
         _player = GameObject.FindWithTag("Player").GetComponent<Player>();
         if (_player == null)
@@ -59,6 +55,12 @@ public class Enemy : MonoBehaviour
         if (_audioSource == null)
         {
             Debug.LogError("The Audio Source on the Enemy is NULL.");
+        }
+
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        if (_spawnManager == null)
+        {
+            Debug.LogError("The Spawn Manager is NULL.");
         }
         
     }
@@ -99,6 +101,15 @@ public class Enemy : MonoBehaviour
                 _moveDirection = _moveDirection.normalized;
             }
 
+            if (transform.position.x > 11.3)
+            {
+                transform.position = new Vector3(-11.3f, transform.position.y, 0);
+            }
+            else if (transform.position.x < -11.3)
+            {
+                transform.position = new Vector3(11.3f, transform.position.y, 0);
+            }
+
             if (transform.position.y < -5.0f)
             {
                 float randomX = Random.Range(-8.0f, 8.0f);
@@ -111,9 +122,6 @@ public class Enemy : MonoBehaviour
 
     void SetMoveDirection()
     {
-        //Collider2D[] hitColliders = Physics2D.OverlapCircleAll(gameObject.transform.position, 3f);
-
-        
 
         switch (_moveType)
         {
@@ -121,17 +129,14 @@ public class Enemy : MonoBehaviour
                 _moveDirection = Vector3.down;
                 break;
             case 1:
-                if (transform.position.x > 0)
-                {
-                    _moveDirection = Vector3.down + Vector3.left;
-                }
-                else
-                {
-                    _moveDirection = Vector3.down + Vector3.right;
-                }
+                _moveDirection = Vector3.down + Vector3.left;
                 _moveDirection = _moveDirection.normalized;
                 break;
             case 2:
+                _moveDirection = Vector3.down + Vector3.right;
+                _moveDirection = _moveDirection.normalized;
+                break;
+            case 3:
                 if (transform.position.x > 0)
                 {
                     _moveDirection = Vector3.down + Vector3.left;
@@ -214,6 +219,8 @@ public class Enemy : MonoBehaviour
     
     private void EnemyDeath()
     {
+        _spawnManager.OnEnemyDeath();
+
         _anim.SetTrigger("OnEnemyDeath");
         _speed = 0;
         _audioSource.Play();
@@ -255,5 +262,15 @@ public class Enemy : MonoBehaviour
     {
         _isShieldActive = true;
         _shieldVisualizer.SetActive(true);
+    }
+
+    public void InitializeEnemy(int moveType, bool hasShield)
+    {
+        _moveType = moveType;
+        SetMoveDirection();
+        if (hasShield == true)
+        {
+            ActivateShield();
+        } 
     }
 }
