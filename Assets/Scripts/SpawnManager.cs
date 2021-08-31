@@ -6,6 +6,7 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private GameObject _enemyPrefab;
     [SerializeField] private GameObject[] _powerups;
+    [SerializeField] private int[] _powerupBalance;
     private float _waitTime = 2f;
     [SerializeField] private GameObject _enemyContainer;
     private bool _stopSpawning = false;
@@ -14,6 +15,7 @@ public class SpawnManager : MonoBehaviour
     private int _numEnemies;
     private int _numEnemiesToSpawn;
     private int _moveType;
+    private int _shieldTrigger;
 
     private UIManager _uiManager;
 
@@ -46,9 +48,10 @@ public class SpawnManager : MonoBehaviour
             if (_numEnemies == 0)
             {
                 _waveNumber++;
-                _numEnemies = (_waveNumber % 12) * 2 + ((_waveNumber / 12) * 2);
+                _numEnemies = _waveNumber * 2;
                 _numEnemiesToSpawn = _numEnemies;
                 _moveType = (_waveNumber - 1) % 4;
+                _shieldTrigger = ((_waveNumber - 1) % 12) / 4;
                 _uiManager.UpdateWave(_waveNumber);
             }
             else
@@ -56,7 +59,7 @@ public class SpawnManager : MonoBehaviour
                 if (_numEnemiesToSpawn > 0)
                 {
                     bool hasShield = false;
-                    switch (_waveNumber / 4)
+                    switch (_shieldTrigger)
                     {
                         case 0:
                             hasShield = false;
@@ -81,7 +84,6 @@ public class SpawnManager : MonoBehaviour
                     newEnemy.transform.parent = _enemyContainer.transform;
                     _numEnemiesToSpawn--;
                 }
-                Debug.Log(Time.time);
             }
             
             yield return new WaitForSeconds(_waitTime);
@@ -96,11 +98,27 @@ public class SpawnManager : MonoBehaviour
         while (_stopSpawning == false)
         {
             Vector3 posToSpawn = new Vector3(Random.Range(-8.0f, 8.0f), 7.0f, 0);
-            int randomPowerUp = Random.Range(0, 5);
+            int randomPowerUp = GetRandomPowerup();
             Instantiate(_powerups[randomPowerUp], posToSpawn, Quaternion.identity);
             yield return new WaitForSeconds(Random.Range(3, 8));
         }
         
+    }
+
+    private int GetRandomPowerup()
+    {
+        int powerup = 0;
+        int randomNum = Random.Range(0, 100);
+        for (int i = 0; i < _powerupBalance.Length; i++)
+        {
+            if (randomNum < _powerupBalance[i])
+            {
+                powerup = i;
+                return powerup;
+            }
+        }
+
+        return powerup;
     }
 
     public void OnPlayerDeath()

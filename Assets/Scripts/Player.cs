@@ -140,7 +140,7 @@ public class Player : MonoBehaviour
         
         if (_isThrusterActive == true)
         {
-            _thrusterCharge -= 1f;
+            _thrusterCharge -= 0.5f;
         }
         if (_isThrusterActive == false && _isThrusterCharged == false)
         {

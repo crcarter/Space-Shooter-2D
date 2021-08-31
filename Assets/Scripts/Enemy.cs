@@ -95,9 +95,13 @@ public class Enemy : MonoBehaviour
         else
         {
             transform.Translate(_moveDirection * _speed * Time.deltaTime);
-            if (_moveType == 2)
+            if (_moveType == 3)
             {
                 _moveDirection += _moveCurve;
+                if (_moveDirection.y > -0.5f)
+                {
+                    _moveDirection.y = -0.5f;
+                }
                 _moveDirection = _moveDirection.normalized;
             }
 
