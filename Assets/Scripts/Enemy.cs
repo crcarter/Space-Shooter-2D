@@ -86,7 +86,7 @@ public class Enemy : MonoBehaviour
         
     void CalculateMovement()
     {
-        if (Vector3.Distance(gameObject.transform.position, _player.transform.position) <= _aggroRange)
+        if (_player != null && Vector3.Distance(gameObject.transform.position, _player.transform.position) <= _aggroRange)
         {
             Vector3 directionVector = _player.transform.position - transform.position;
             directionVector.Normalize();

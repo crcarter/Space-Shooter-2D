@@ -16,4 +16,9 @@ public class Explosion : MonoBehaviour
     {
         
     }
+
+    public void DoubleSize()
+    {
+        transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+    }
 }

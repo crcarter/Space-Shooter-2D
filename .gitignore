@@ -58,3 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# FileBase
+Assets/GameDevHQ/
+Assets/GameDevHQ.meta
