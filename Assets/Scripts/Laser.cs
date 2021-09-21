@@ -27,21 +27,19 @@ public class Laser : MonoBehaviour
     {
         transform.Translate(Vector3.up * _speed * Time.deltaTime);
 
-        if (transform.position.y >= 9.0f)
-        {
-            if (transform.parent != null)
-            {
-                Destroy(transform.parent.gameObject);
-            }
-            Destroy(this.gameObject);
-        }
+        CheckOffScreen();
     }
 
     void MoveDown()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
 
-        if (transform.position.y <= -8.0f)
+        CheckOffScreen();
+    }
+
+    void CheckOffScreen()
+    {
+        if (transform.position.y <= -8.0f || transform.position.y >= 9.0f || transform.position.x <= -11.3f || transform.position.x >= 11.3f)
         {
             if (transform.parent != null)
             {
@@ -55,6 +53,11 @@ public class Laser : MonoBehaviour
     {
         _isEnemyLaser = true;
         _laserDirection = direction;
+    }
+
+    public void RotateLaser(float rotation)
+    {
+        transform.Rotate(Vector3.forward * rotation);
     }
 
     public bool GetIsEnemyLaser()
@@ -71,7 +74,10 @@ public class Laser : MonoBehaviour
             if (player != null)
             {
                 player.Damage();
-                Destroy(transform.parent.gameObject);
+                if (transform.parent != null)
+                {
+                    Destroy(transform.parent.gameObject);
+                }
                 Destroy(this.gameObject);
             }
         }

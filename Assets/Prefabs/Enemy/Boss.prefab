@@ -130,8 +130,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33766f5b8e83aa449be9a852154bb89d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 1
   _explosionPrefab: {fileID: 2058814652547018753, guid: eab5935e83399cd4198f539f30b705f0,
+    type: 3}
+  _laserPrefab: {fileID: 1635036543186263145, guid: 9389dd2c692b3bd489d41f51c41fdc9a,
     type: 3}
 --- !u!58 &1417852903391541422
 CircleCollider2D:
