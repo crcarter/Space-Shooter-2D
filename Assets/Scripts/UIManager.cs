@@ -86,7 +86,7 @@ public class UIManager : MonoBehaviour
         _ammoText.text = "Ammo: " + currentAmmo + " / " + maxAmmo;
     }
 
-    public void UpdateWave(int waveNum)
+    public void UpdateWave(string waveNum)
     {
         _waveText.text = "Wave: " + waveNum;
     }

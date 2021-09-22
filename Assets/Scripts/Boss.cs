@@ -24,6 +24,8 @@ public class Boss : MonoBehaviour
 
     private bool _inPosition = false;
 
+    private SpawnManager _spawnManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +35,12 @@ public class Boss : MonoBehaviour
         if (_player == null)
         {
             Debug.LogError("Player is NULL.");
+        }
+
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        if (_spawnManager == null)
+        {
+            Debug.LogError("The Spawn Manager is NULL.");
         }
     }
 
@@ -80,13 +88,11 @@ public class Boss : MonoBehaviour
                     if (_numTargetLasers > 0)
                     {
                         Vector3 playerDirectionVector = _player.transform.position - transform.position;
-                       // playerDirectionVector.Normalize();
                         float playerAngle = Vector3.Angle(playerDirectionVector, Vector3.down);
                         if (_player.transform.position.x < 0)
                         {
                             playerAngle = playerAngle * -1;
                         }
-                        Debug.Log("Angle: " + playerAngle);
                         FireRotatedLaser(playerAngle);
                         _canFire = Time.time + 0.2f;
                         _numTargetLasers--;
@@ -145,10 +151,16 @@ public class Boss : MonoBehaviour
             {
                 _player.AddScore(100);
             }
+            _spawnManager.OnBossDeath();
             GameObject explosionObject = Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
             Explosion explosion = explosionObject.GetComponent<Explosion>();
             explosion.DoubleSize();
             Destroy(this.gameObject, 0.25f);
         }
+    }
+
+    public void SetBossHealth(int multiplier)
+    {
+        _health = 10 + (5 * multiplier);
     }
 }

@@ -19,6 +19,10 @@ public class SpawnManager : MonoBehaviour
 
     private UIManager _uiManager;
 
+    [SerializeField] private GameObject _bossPrefab;
+    private bool _bossLevel = false;
+    private int _bossCount = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,44 +49,55 @@ public class SpawnManager : MonoBehaviour
 
         while (_stopSpawning == false)
         {
-            if (_numEnemies == 0)
+            if (_bossLevel == false)
             {
-                _waveNumber++;
-                _numEnemies = _waveNumber * 2;
-                _numEnemiesToSpawn = _numEnemies;
-                _moveType = (_waveNumber - 1) % 4;
-                _shieldTrigger = ((_waveNumber - 1) % 12) / 4;
-                _uiManager.UpdateWave(_waveNumber);
-            }
-            else
-            {
-                if (_numEnemiesToSpawn > 0)
+                if (_numEnemies == 0)
                 {
-                    bool hasShield = false;
-                    switch (_shieldTrigger)
+                    _waveNumber++;
+                    _numEnemies = _waveNumber * 2;
+                    _numEnemiesToSpawn = _numEnemies;
+                    _moveType = (_waveNumber - 1) % 4;
+                    _shieldTrigger = ((_waveNumber - 1) % 12) / 4;
+                    _uiManager.UpdateWave(_waveNumber.ToString());
+                    if (_waveNumber != 1 && (_waveNumber - 1) % 4 == 0)
                     {
-                        case 0:
-                            hasShield = false;
-                            break;
-                        case 1:
-                            if (_numEnemiesToSpawn % 2 == 1)
-                            {
-                                hasShield = true;
-                            }
-                            break;
-                        case 2:
-                            hasShield = true;
-                            break;
-                        default:
-                            hasShield = false;
-                            break;
+                        _bossLevel = true;
+                        GameObject bossSpawn = Instantiate(_bossPrefab, new Vector3(0f, 12f, 0f), Quaternion.identity);
+                        Boss boss = bossSpawn.GetComponent<Boss>();
+                        boss.SetBossHealth(_bossCount);
+                        _uiManager.UpdateWave("Boss");
                     }
-                    Vector3 posToSpawn = new Vector3(Random.Range(-8.0f, 8.0f), 7.0f, 0);
-                    GameObject newEnemy = Instantiate(_enemyPrefab, posToSpawn, Quaternion.identity);
-                    Enemy enemy = newEnemy.GetComponent<Enemy>();
-                    enemy.InitializeEnemy(_moveType, hasShield);
-                    newEnemy.transform.parent = _enemyContainer.transform;
-                    _numEnemiesToSpawn--;
+                }
+                else
+                {
+                    if (_numEnemiesToSpawn > 0)
+                    {
+                        bool hasShield = false;
+                        switch (_shieldTrigger)
+                        {
+                            case 0:
+                                hasShield = false;
+                                break;
+                            case 1:
+                                if (_numEnemiesToSpawn % 2 == 1)
+                                {
+                                    hasShield = true;
+                                }
+                                break;
+                            case 2:
+                                hasShield = true;
+                                break;
+                            default:
+                                hasShield = false;
+                                break;
+                        }
+                        Vector3 posToSpawn = new Vector3(Random.Range(-8.0f, 8.0f), 7.0f, 0);
+                        GameObject newEnemy = Instantiate(_enemyPrefab, posToSpawn, Quaternion.identity);
+                        Enemy enemy = newEnemy.GetComponent<Enemy>();
+                        enemy.InitializeEnemy(_moveType, hasShield);
+                        newEnemy.transform.parent = _enemyContainer.transform;
+                        _numEnemiesToSpawn--;
+                    }
                 }
             }
             
@@ -129,5 +144,12 @@ public class SpawnManager : MonoBehaviour
     public void OnEnemyDeath()
     {
         _numEnemies--;
+    }
+
+    public void OnBossDeath()
+    {
+        _bossLevel = false;
+        _bossCount++;
+        _uiManager.UpdateWave(_waveNumber.ToString());
     }
 }
